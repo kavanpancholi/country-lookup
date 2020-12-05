@@ -2498,6 +2498,11 @@ express-joi-validator@^2.0.1:
     extend "2.0.x"
     joi "6.x.x"
 
+express-rate-limit@^5.2.3:
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/express-rate-limit/-/express-rate-limit-5.2.3.tgz#ae73b3dc723decd697797611bd96e9b34a912f6c"
+  integrity sha512-cjQH+oDrEPXxc569XvxhHC6QXqJiuBT6BhZ70X3bdAImcnHnTNMVuMAJaT0TXPoRiEErUrVPRcOTpZpM36VbOQ==
+
 express-validation@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/express-validation/-/express-validation-1.0.3.tgz#677261e65f27f4e869c98dedc7934da6bbefaa8f"

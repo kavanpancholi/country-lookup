@@ -1,3 +1,4 @@
+import rateLimit from 'express-rate-limit';
 import express from 'express';
 import dotenv from 'dotenv';
 
@@ -19,10 +20,16 @@ app.use(
   }),
 );
 
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 30, // 30 requests
+  keyGenerator: req => req.headers.authorization,
+});
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/', publicRoutes);
-app.use('/api', apiMiddleware, apiRoutes);
+app.use('/api', [apiMiddleware, apiLimiter], apiRoutes);
 app.use(errorHandler);
 
 module.exports = app;
