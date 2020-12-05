@@ -24,6 +24,13 @@ const apiLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
   max: 30, // 30 requests
   keyGenerator: req => req.headers.authorization,
+  message: {
+    code: 429,
+    errorMessage: 'Too many requests. Please try again later',
+    error: {},
+    data: null,
+    success: false,
+  },
 });
 
 app.use(cors());
