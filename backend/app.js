@@ -8,7 +8,7 @@ import cors from 'cors';
 import publicRoutes from './src/routes/public';
 import apiRoutes from './src/routes/api';
 import apiMiddleware from './src/middleware/apiAuth';
-import { errorResponse } from './src/helpers';
+import errorHandler from './src/middleware/errorHandler';
 
 dotenv.config();
 require('./src/config/sequelize');
@@ -37,19 +37,5 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use('/', publicRoutes);
 app.use('/api', [apiMiddleware, apiLimiter], apiRoutes);
-app.use((err, req, res) => {
-  if (err && err.message === 'validation error') {
-    const messages = err.errors.map(e => e.messages);
-    return errorResponse(req, res, messages.join(', '), 400, err);
-  }
-});
-app.use((req, res, next) => {
-  res.status(404).send({
-    code: 404,
-    errorMessage: 'Page not found',
-    error: {},
-    data: null,
-    success: false,
-  });
-});
+app.use(errorHandler);
 module.exports = app;
