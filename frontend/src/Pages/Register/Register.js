@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import styles from "./Register.module.css";
 
-import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import {useForm} from "react-hook-form";
+import {Link} from "react-router-dom";
 import config from "../../config";
 
 const Register = () => {
-  const { register, handleSubmit, errors } = useForm();
+  const {register, handleSubmit, errors} = useForm();
   const [message, setMessage] = useState();
 
   const onSubmit = (data, e) => {
@@ -14,7 +14,7 @@ const Register = () => {
       data: "Registration is in progress...",
       type: "alert-warning",
     });
-    fetch(`${config.baseUrl}/user/register`, {
+    fetch(`${config.baseUrl}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -22,13 +22,12 @@ const Register = () => {
       body: JSON.stringify(data),
     })
       .then((res) => res.json())
-      .then((data) => {
-        const hasError = "error" in data && data.error != null;
+      .then(res => {
+        const hasError = res.code !== 200;
         setMessage({
-          data: hasError ? data.error : "Registered successfully",
+          data: hasError ? res.errorMessage : "Registered successfully",
           type: hasError ? "alert-danger" : "alert-success",
         });
-
         !hasError && e.target.reset();
       });
   };
@@ -61,6 +60,60 @@ const Register = () => {
           </legend>
           <form onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
             <div className="form-group">
+              <label htmlFor="inputForFirstName">First Name</label>
+              <span className="mandatory">*</span>
+              <input
+                id="inputForFirstName"
+                name="firstName"
+                type="text"
+                className="form-control"
+                aria-describedby="First name"
+                placeholder="First name"
+                ref={register({
+                  required: {
+                    value: true,
+                    message: "Please enter first name",
+                  },
+                  maxLength: {
+                    value: 255,
+                    message: "Maximum 255 characters are allowed",
+                  },
+                })}
+              />
+              {errors.name && (
+                <span className={`${styles.errorMessage} mandatory`}>
+                  {errors.name.message}
+                </span>
+              )}
+            </div>
+            <div className="form-group">
+              <label htmlFor="inputForLastName">Last Name</label>
+              <span className="mandatory">*</span>
+              <input
+                id="inputForLastName"
+                name="lastName"
+                type="text"
+                className="form-control"
+                aria-describedby="Last name"
+                placeholder="Last name"
+                ref={register({
+                  required: {
+                    value: true,
+                    message: "Please enter last name",
+                  },
+                  maxLength: {
+                    value: 255,
+                    message: "Maximum 255 characters are allowed",
+                  },
+                })}
+              />
+              {errors.name && (
+                <span className={`${styles.errorMessage} mandatory`}>
+                  {errors.name.message}
+                </span>
+              )}
+            </div>
+            <div className="form-group">
               <label htmlFor="inputForEmail">Email address</label>
               <span className="mandatory">*</span>
               <input
@@ -79,10 +132,6 @@ const Register = () => {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
                     message: "Enter a valid email address",
                   },
-                  minLength: {
-                    value: 6,
-                    message: "Minimum 6 characters are allowed",
-                  },
                   maxLength: {
                     value: 255,
                     message: "Maximum 255 characters are allowed",
@@ -96,37 +145,6 @@ const Register = () => {
               {errors.email && (
                 <span className={`${styles.errorMessage} mandatory`}>
                   {errors.email.message}
-                </span>
-              )}
-            </div>
-            <div className="form-group">
-              <label htmlFor="inputForName">Your Name</label>
-              <span className="mandatory">*</span>
-              <input
-                id="inputForName"
-                name="name"
-                type="text"
-                className="form-control"
-                aria-describedby="Enter your name"
-                placeholder="Enter your name"
-                ref={register({
-                  required: {
-                    value: true,
-                    message: "Please enter your name",
-                  },
-                  minLength: {
-                    value: 6,
-                    message: "Minimum 6 characters are allowed",
-                  },
-                  maxLength: {
-                    value: 255,
-                    message: "Maximum 255 characters are allowed",
-                  },
-                })}
-              />
-              {errors.name && (
-                <span className={`${styles.errorMessage} mandatory`}>
-                  {errors.name.message}
                 </span>
               )}
             </div>
