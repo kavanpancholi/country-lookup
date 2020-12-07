@@ -44,6 +44,7 @@ Migration will create table users and seed some default data
 > Query Params: 
 {
     "baseCurrency": "SEK",
+    "baseAmount": 5
 }
 > Response : 
 {
@@ -58,7 +59,8 @@ Migration will create table users and seed some default data
                         "code": "USD",
                         "name": "United States dollar",
                         "symbol": "$",
-                        "rate": 0.1185341886
+                        "rate": 0.1185341886,
+                        "amount": 0.592670943
                     }
                 ]
             },
@@ -70,11 +72,14 @@ Migration will create table users and seed some default data
                         "code": "INR",
                         "name": "Indian rupee",
                         "symbol": "₹",
-                        "rate": 8.7421766851
+                        "rate": 8.7421766851,
+                        "amount": 43.7108834255
                     }
                 ]
             }
-        ]
+        ],
+        "baseAmount": "5",
+        "baseCurrency": "SEK"
     },
     "success": true
 }

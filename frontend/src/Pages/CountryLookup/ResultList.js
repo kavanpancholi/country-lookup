@@ -12,38 +12,36 @@ const ResultList = (props) => {
         </tr>
         </thead>
         <tbody>
-        {props.list.map((country, countryIndex) => {
+        {props.response.countries.map((country, countryIndex) => {
           return (
             <tr key={countryIndex}>
               <td>{country.name}</td>
               <td>{country.population}</td>
               <td>
-                <table className="table">
-                  <thead>
-                  <tr>
-                    <th width="40%">Name</th>
-                    <th width="60%">Exchange Rate compared to SEK</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {country.currencies.map((currency, currencyIndex) => {
-                    return (
-                      <tr key={currencyIndex}>
-                        <td>{currency.name}</td>
-                        <td>{currency.rate || '-'}</td>
-                      </tr>
-                    )
-                  })}
-                  </tbody>
-                </table>
+                {country.currencies.map((currency) => {
+                  return (
+                    <dl className="dl-horizontal">
+                      <dt>Currency</dt>
+                      <dd>{currency.name}</dd>
+                      <dt>Exchange Rate compared to {props.response.baseCurrency}</dt>
+                      <dd>{currency.rate || '-'}</dd>
+                      {currency.rate &&
+                        <>
+                        <dt>{props.response.baseAmount} {props.response.baseCurrency} in {currency.code}</dt>
+                        <dd>{currency.symbol} {currency.amount}</dd>
+                        </>
+                      }
+                    </dl>
+                  )
+                })}
               </td>
             </tr>
-        )
+          )
         })}
         </tbody>
-        </table>
-        </div>
-        );
-        };
+      </table>
+    </div>
+  );
+};
 
-        export default ResultList;
+export default ResultList;

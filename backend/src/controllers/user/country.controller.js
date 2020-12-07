@@ -9,7 +9,7 @@ import { errorResponse, successResponse } from '../../helpers';
 export const countries = async (req, res) => {
   try {
     const { keyword } = req.params;
-    const { baseCurrency = 'SEK' } = req.query;
+    const { baseCurrency = 'SEK', baseAmount = 1 } = req.query;
     if (!keyword) {
       return errorResponse(req, res, 'Please enter valid keyword', 400);
     }
@@ -27,6 +27,9 @@ export const countries = async (req, res) => {
             currency.rate = typeof getExchangeRatesResponse.data.rates[currency.code] !== 'undefined'
               ? getExchangeRatesResponse.data.rates[currency.code]
               : null;
+            currency.amount = typeof getExchangeRatesResponse.data.rates[currency.code] !== 'undefined'
+              ? getExchangeRatesResponse.data.rates[currency.code] * baseAmount
+              : null;
             return currency;
           });
           return {
@@ -35,7 +38,7 @@ export const countries = async (req, res) => {
             currencies: item.currencies,
           };
         });
-        return successResponse(req, res, { countries });
+        return successResponse(req, res, { countries, baseAmount, baseCurrency });
       }))
       .catch((errors) => {
         if (typeof errors.response !== 'undefined' && errors.response.status === 404) {

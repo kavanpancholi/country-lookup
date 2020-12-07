@@ -11,7 +11,8 @@ const formReducer = (state, event) => {
 
 const Dashboard = () => {
   const [formData, setFormData] = useReducer(formReducer, {
-    baseCurrency: "SEK"
+    baseCurrency: "SEK",
+    baseAmount: 1,
   });
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState();
@@ -21,7 +22,7 @@ const Dashboard = () => {
     event.preventDefault();
     if (formData.keyword) {
       setSubmitting(true);
-      const params = {baseCurrency: formData.baseCurrency};
+      const params = {baseCurrency: formData.baseCurrency, baseAmount: formData.baseAmount};
       fetch(`${config.baseUrl}/api/countries/${formData.keyword}?${new URLSearchParams(params)}`, {
         method: "GET",
         headers: {
@@ -33,7 +34,7 @@ const Dashboard = () => {
         .then((res) => {
           setSubmitting(false);
           if (res.success) {
-            setCountryResponse(res.data.countries);
+            setCountryResponse(res.data);
             setMessage(null);
           } else {
             setMessage({
@@ -56,11 +57,9 @@ const Dashboard = () => {
   return (
     <div className="px-3 mt-4 container">
       <form onSubmit={handleSubmit}>
-        <div className="row">
+        <h2 className="text-center">Search Country</h2>
+        <div className="row mt-4">
           <div className="col">
-            <h2 className="text-center">Search Country</h2>
-          </div>
-          <div className="col-3 text-right my-auto">
             <label htmlFor="baseCurrency" className="mr-2">Base Currency:</label>
             <select name="baseCurrency" defaultValue="SEK" onChange={handleChange}>
               {config.baseCurrencies.map((currency, currencyIndex) => {
@@ -70,8 +69,12 @@ const Dashboard = () => {
               })}
             </select>
           </div>
+          <div className="col">
+            <label htmlFor="baseAmount" className="mr-2">Base Amount:</label>
+            <input type="number" min="1" name="baseAmount" defaultValue="1" onChange={handleChange} />
+          </div>
         </div>
-        <div className="input-group mb-3">
+        <div className="input-group mb-3 mt-4">
           <input type="text" name="keyword" placeholder="Enter keyword to lookup Country" onChange={handleChange}
                  className="form-control"
                  aria-label="Text input with dropdown button"/>
@@ -103,7 +106,7 @@ const Dashboard = () => {
         </div>
       )}
       {countryResponse &&
-      <ResultList list={countryResponse}/>
+      <ResultList response={countryResponse}/>
       }
     </div>
   );
