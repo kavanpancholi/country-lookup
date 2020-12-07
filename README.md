@@ -1,5 +1,8 @@
 # Country Lookup with Current Exchange Rates
 
+- [Backend Project Setup](#backendSetup)
+- [Frontend Project Setup](#frontendSetup)
+
 # <a name="backendSetup"></a> Backend Project Setup
 
 ### Installing
