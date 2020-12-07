@@ -1,5 +1,9 @@
 # Country Lookup with Current Exchange Rates
 
+## Screenshot
+
+!["Search Country Screenshot"](frontend/public/search-country.png)
+
 - [Backend Project Setup](#backendSetup)
 - [Frontend Project Setup](#frontendSetup)
 
