@@ -30,6 +30,10 @@ Migration will create table users and seed some default data
 {
     "Authorization": "Bearer {Token}",
 }
+> Query Params: 
+{
+    "baseCurrency": "SEK",
+}
 > Response : 
 {
     "code": 200,

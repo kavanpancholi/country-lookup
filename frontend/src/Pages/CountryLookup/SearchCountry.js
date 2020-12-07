@@ -10,36 +10,40 @@ const formReducer = (state, event) => {
 }
 
 const Dashboard = () => {
-  const [formData, setFormData] = useReducer(formReducer, {});
+  const [formData, setFormData] = useReducer(formReducer, {
+    baseCurrency: "SEK"
+  });
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState();
   const [countryResponse, setCountryResponse] = useState();
 
   const handleSubmit = event => {
     event.preventDefault();
-    setSubmitting(true);
-
-    fetch(`${config.baseUrl}/api/countries/${formData.keyword}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        setSubmitting(false);
-        if (res.success) {
-          setCountryResponse(res.data.countries);
-          setMessage(null);
-        } else {
-          setMessage({
-            type: 'alert-danger',
-            data: res.errorMessage,
-          });
-          setCountryResponse(null);
-        }
-      });
+    if (formData.keyword) {
+      setSubmitting(true);
+      const params = {baseCurrency: formData.baseCurrency};
+      fetch(`${config.baseUrl}/api/countries/${formData.keyword}?${new URLSearchParams(params)}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          setSubmitting(false);
+          if (res.success) {
+            setCountryResponse(res.data.countries);
+            setMessage(null);
+          } else {
+            setMessage({
+              type: 'alert-danger',
+              data: res.errorMessage,
+            });
+            setCountryResponse(null);
+          }
+        });
+    }
   }
 
   const handleChange = event => {
@@ -51,13 +55,28 @@ const Dashboard = () => {
 
   return (
     <div className="px-3 mt-4 container">
-      <h2 className="text-center">Search Country</h2>
       <form onSubmit={handleSubmit}>
+        <div className="row">
+          <div className="col">
+            <h2 className="text-center">Search Country</h2>
+          </div>
+          <div className="col-3 text-right my-auto">
+            <label htmlFor="baseCurrency" className="mr-2">Base Currency:</label>
+            <select name="baseCurrency" defaultValue="SEK" onChange={handleChange}>
+              {config.baseCurrencies.map((currency, currencyIndex) => {
+                return (
+                  <option key={currencyIndex} value={currency}>{currency}</option>
+                )
+              })}
+            </select>
+          </div>
+        </div>
         <div className="input-group mb-3">
-          <input type="text" name="keyword" onChange={handleChange} className="form-control"
+          <input type="text" name="keyword" placeholder="Enter keyword to lookup Country" onChange={handleChange}
+                 className="form-control"
                  aria-label="Text input with dropdown button"/>
           <div className="input-group-append">
-            <button className="btn btn-outline-secondary">Search</button>
+            <button className="btn btn-outline-secondary" disabled={!formData.baseCurrency}>Search</button>
           </div>
         </div>
       </form>
